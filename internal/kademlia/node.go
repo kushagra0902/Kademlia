@@ -1,7 +1,7 @@
 package kademlia
 
 import (
-
+	//"KademliaApply/internal/routing"
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
@@ -9,12 +9,13 @@ import (
 )
 
 type Node struct {
-	ID [20]byte 
-	IP string
-	Port string
-	LastSeen time.Time
+	ID           [20]byte
+	IP           string
+	Port         string
+	LastSeen     time.Time
 	RoutingTable RoutingTable
 }
+
 
 func GenerateNodeID(addr string) [20]byte {
 	nodeID := sha1.Sum([]byte(addr))
@@ -32,7 +33,8 @@ func NodeConstructor() *Node{
 	var NewNode Node
 	NewNode.ID = GenerateNodeID(addr)
 	NewNode.PrintNodeID()
-	// We will make a http client which will use the routes to listen to different rpcs. This is done in accordance to accomodate the other structure and to well define the files
+	Rt := NewRoutingTable(NewNode)
+	NewNode.RoutingTable = *Rt
 	StartHttpServer(&NewNode)
 	return &NewNode
 }
